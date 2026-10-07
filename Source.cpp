@@ -1,9 +1,18 @@
 #include <iostream>
 #include "BST.h"
 #include "RBTree.h"
+#include "Tree234.h"
 
 using namespace std;
 
+void print234(Tree234& tree, const char* name) {
+    cout << "\n" << name << ":\n";
+    tree.print();
+
+    cout << "Height: " << tree.height() << endl;
+    cout << "Nodes: " << tree.size()
+        << ", keys: " << tree.keysCount() << endl;
+}
 // =====================================================
 // BST output
 // =====================================================
@@ -27,7 +36,7 @@ void printRB(RBTree& tree, const char* name) {
 }
 
 // =====================================================
-// Check whether two trees contain the same set of keys
+// Check whether two trees contain the same set of keys(TASK B)
 // =====================================================
 // Check all keys of the first tree in the second tree.
 // The number of nodes must also be the same.
@@ -87,7 +96,6 @@ bool equalRB(RBTree& first, RBTree& second, int data[], int count, int& visited)
 // MAIN
 // =====================================================
 int main() {
-    setlocale(LC_ALL, "ukr");
 
     // =================================================
     // Initial data
@@ -103,7 +111,7 @@ int main() {
     int data2[] =
     {
         40, 20, 60, 10, 30,
-        50, 70, 5, 15, 25,
+        50, 71, 5, 15, 25,
         35, 45, 55, 65, 75
     };
 
@@ -387,7 +395,45 @@ int main() {
         rbT2Copy,
         "Initial RB T2"
     );
+    // =================================================
+// TASK D
+//
+// Convert Red-Black trees to 2-3-4 trees
+// and print both representations.
+// =================================================
 
+    cout << "\n\n========================================\n";
+    cout << "TASK D\n";
+    cout << "Convert Red-Black tree to 2-3-4 tree\n";
+    cout << "========================================\n";
+
+    Tree234 t234_1;
+    Tree234 t234_2;
+
+    int visitedD_T1 = 0;
+    int visitedD_T2 = 0;
+
+    // початкові дерева (копії), щоб був чистий приклад
+    rbT1Copy.toTwoThreeFour(t234_1, visitedD_T1);
+    rbT2Copy.toTwoThreeFour(t234_2, visitedD_T2);
+
+    printRB(rbT1Copy, "RB T1 (initial)");
+    print234(t234_1, "2-3-4 T1");
+    cout << "Visited RB nodes: " << visitedD_T1 << endl;
+
+    printRB(rbT2Copy, "RB T2 (initial)");
+    print234(t234_2, "2-3-4 T2");
+    cout << "Visited RB nodes: " << visitedD_T2 << endl;
+
+    // дерево T1 після Task B (з усіма вставленими ключами)
+    Tree234 t234_merged;
+    int visitedD_merged = 0;
+
+    rbT1.toTwoThreeFour(t234_merged, visitedD_merged);
+
+    printRB(rbT1, "RB T1 (after Task B)");
+    print234(t234_merged, "2-3-4 T1 (after Task B)");
+    cout << "Visited RB nodes: " << visitedD_merged << endl;
 
     // =================================================
     // FINAL TABLE
@@ -447,7 +493,9 @@ int main() {
 
     rbT1Copy.clear();
     rbT2Copy.clear();
-
+    t234_1.clear();
+    t234_2.clear();
+    t234_merged.clear();
 
     cout << "\nMemory occupied by the nodes has been released."
         << endl;

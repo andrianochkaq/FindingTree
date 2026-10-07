@@ -739,3 +739,79 @@ void RBTree::copyTo(RBTree& tree)
 
     copyTree(root, tree);
 }
+// ======================================
+// CONVERT TO 2-3-4 TREE
+// ======================================
+
+Tree234::Node* RBTree::convertNode(Node* black, int& visited)
+{
+    if (black == nullptr)
+    {
+        return nullptr;
+    }
+
+    visited++;
+
+    Node* leftRed = nullptr;
+    Node* rightRed = nullptr;
+
+    if (black->left != nullptr && black->left->color == RED)
+    {
+        leftRed = black->left;
+        visited++;
+    }
+
+    if (black->right != nullptr && black->right->color == RED)
+    {
+        rightRed = black->right;
+        visited++;
+    }
+
+    Tree234::Node* result = new Tree234::Node();
+
+    // піддерева (чорні вузли або nullptr), що стануть дітьми
+    Node* sub[4];
+    int subCount = 0;
+
+    if (leftRed != nullptr)
+    {
+        result->keys[result->count++] = leftRed->key;
+
+        sub[subCount++] = leftRed->left;
+        sub[subCount++] = leftRed->right;
+    }
+    else
+    {
+        sub[subCount++] = black->left;
+    }
+
+    result->keys[result->count++] = black->key;
+
+    if (rightRed != nullptr)
+    {
+        result->keys[result->count++] = rightRed->key;
+
+        sub[subCount++] = rightRed->left;
+        sub[subCount++] = rightRed->right;
+    }
+    else
+    {
+        sub[subCount++] = black->right;
+    }
+
+    for (int i = 0; i < subCount; i++)
+    {
+        result->children[i] = convertNode(sub[i], visited);
+    }
+
+    return result;
+}
+
+void RBTree::toTwoThreeFour(Tree234& tree, int& visited)
+{
+    visited = 0;
+
+    tree.clear();
+
+    tree.root = convertNode(root, visited);
+}

@@ -1,4 +1,5 @@
 #pragma once
+#include "Tree234.h"
 
 class RBTree
 {
@@ -49,11 +50,12 @@ private:
     int getSize(Node* node);
 
     void copyTree(Node* node, RBTree& tree);
+    Tree234::Node* convertNode(Node* black, int& visited);
 
 public:
     RBTree();
     ~RBTree();
-
+    void toTwoThreeFour(Tree234& tree, int& visited);
     void insert(int key, int& visited);
 
     bool search(int key, int& visited);
